@@ -28,6 +28,9 @@
 
     //---------------------
     circuit.components.set('A', {in:[1,2,3], out: null})
+    circuit.components.set('B', {in:[1,2], out: null})
+
+    circuit.connections.set('AB', [circuit.components.get('A').out, circuit.components.get('B').in[1]]);
 
 </script>
 

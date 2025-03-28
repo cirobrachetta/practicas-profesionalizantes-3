@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+</body>
+<script>
+
+    let equalizer = 
+    {
+        presets: new Map(),
+        adjustments: new Map(),
+        inputFile: "",
+    }
+
+    let ClassicalAdjustmenst = new Map();
+    equalizer.inputFile = "c:\\libblc-go.mp3"
+
+    ClassicalAdjustmenst.set("Preamp", "12.0");
+    ClassicalAdjustmenst.set("31.25 Hz", "0.0");
+    ClassicalAdjustmenst.set("62.5 Hz", "0.0");
+    ClassicalAdjustmenst.set("250 Hz", "0.0");
+    ClassicalAdjustmenst.set("16 KHz", "0.0");
+
+    equalizer.presets.set("Classical", ClassicalAdjustmenst);
+</script>
+</html>

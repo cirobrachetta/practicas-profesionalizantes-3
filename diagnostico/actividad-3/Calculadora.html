@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        .calculadora {
+            display: grid;
+            grid-template-columns: repeat(4, 60px);
+            gap: 5px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .pantalla {
+            grid-column: span 4;
+            height: 50px;
+            text-align: right;
+            font-size: 24px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            height: 50px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .numero { background: #007bff; color: white; }
+        .operador { background: #28a745; color: white; }
+        .igual { background: #f4a900; color: white; }
+        .borrar { grid-column: span 4; background: red; color: white; }
+    </style>
+</head>
+<body>
+    <div class="calculadora">
+        <input type="text" class="pantalla" id="pantalla" value="0" disabled>
+        <button id="botton7" class="numero">7</button>
+        <button id="botton8" class="numero">8</button>
+        <button id="botton9" class="numero">9</button>
+        <button id="bottonPlus" class="operador">+</button>
+        <button id="botton4" class="numero">4</button>
+        <button id="botton5" class="numero">5</button>
+        <button id="botton6" class="numero">6</button>
+        <button id="bottonLes" class="operador">-</button>
+        <button id="botton3" class="numero">3</button>
+        <button id="botton2" class="numero">2</button>
+        <button id="botton1" class="numero">1</button>
+        <button id="bottonMult" class="operador">*</button>
+        <button id="botton0" class="numero">0</button>
+        <button id="bottonPoint" class="numero">.</button>
+        <button id="bottonCalc" class="igual">=</button>
+        <button id="bottonDiv" class="operador">/</button>
+        <button id="bottonBorrar" class="borrar">Borrar</button>
+    </div>
+    <script>
+        botton7 = document.getElementById("botton7");
+        botton7.onclick = () => agregar('7');
+
+        botton8 = document.getElementById("botton8");
+        botton8.onclick = () => agregar('8');
+
+        botton9 = document.getElementById("botton9");
+        botton9.onclick = () => agregar('9');
+
+        bottonplus = document.getElementById("bottonPlus");
+        bottonplus.onclick = () => agregar('+');
+
+        botton4 = document.getElementById("botton4");
+        botton4.onclick = () => agregar('4');
+
+        botton5 = document.getElementById("botton5");
+        botton5.onclick = () => agregar('5');
+
+        botton6 = document.getElementById("botton6");
+        botton6.onclick = () => agregar("6");
+
+        bottonLes = document.getElementById("bottonLes");
+        bottonLes.onclick = () => agregar("-");
+
+        botton3 = document.getElementById("botton3");
+        botton3.onclick = () => agregar('3');
+        
+        botton2 = document.getElementById("botton2");
+        botton2.onclick = () => agregar('2');
+
+        botton1 = document.getElementById("botton1");
+        botton1.onclick = () => agregar('1');
+
+        bottonMult = document.getElementById("bottonMult");
+        bottonMult.onclick = () => agregar('*');
+
+        botton0 = document.getElementById("botton0");
+        botton0.onclick = () => agregar("0");
+
+        bottonPoint = document.getElementById("bottonPoint");
+        bottonPoint.onclick = () => agregar('.');
+
+        bottonCalc = document.getElementById("bottonCalc");
+        bottonCalc.onclick=calcular;
+
+        bottonDiv = document.getElementById("bottonDiv");
+        bottonDiv.onclick = () => agregar('/');
+
+        bottonBorrar = document.getElementById("bottonBorrar");
+        bottonBorrar.onclick = borrar;
+
+
+
+        function agregar(valor) {
+            let pantalla = document.getElementById("pantalla");
+            if (pantalla.value === "0" && valor !== ".") {
+                pantalla.value = valor;
+            } else {
+                pantalla.value += valor;
+            }
+        }
+        function calcular() {
+            try {
+                document.getElementById("pantalla").value = eval(document.getElementById("pantalla").value);
+            } catch {
+                document.getElementById("pantalla").value = "Error";
+            }
+        }
+        function borrar() {
+            document.getElementById("pantalla").value = "0";
+        }
+    </script>
+</body>
+</html>

@@ -66,54 +66,84 @@
     </div>
     <script>
         botton7 = document.getElementById("botton7");
-        botton7.onclick = () => agregar('7');
+        botton7.onclick = function() {
+            agregar('7');
+        };
 
-        botton8 = document.getElementById("botton8");
-        botton8.onclick = () => agregar('8');
+        var botton8 = document.getElementById("botton8");
+        botton8.onclick = function() {
+            agregar('8');
+        };
 
-        botton9 = document.getElementById("botton9");
-        botton9.onclick = () => agregar('9');
+        var botton9 = document.getElementById("botton9");
+        botton9.onclick = function() {
+            agregar('9');
+        };
 
-        bottonplus = document.getElementById("bottonPlus");
-        bottonplus.onclick = () => agregar('+');
+        var bottonplus = document.getElementById("bottonPlus");
+        bottonplus.onclick = function() {
+            agregar('+');
+        };
 
-        botton4 = document.getElementById("botton4");
-        botton4.onclick = () => agregar('4');
+        var botton4 = document.getElementById("botton4");
+        botton4.onclick = function() {
+            agregar('4');
+        };
 
-        botton5 = document.getElementById("botton5");
-        botton5.onclick = () => agregar('5');
+        var botton5 = document.getElementById("botton5");
+        botton5.onclick = function() {
+            agregar('5');
+        };
 
-        botton6 = document.getElementById("botton6");
-        botton6.onclick = () => agregar("6");
+        var botton6 = document.getElementById("botton6");
+        botton6.onclick = function() {
+            agregar('6');
+        };
 
-        bottonLes = document.getElementById("bottonLes");
-        bottonLes.onclick = () => agregar("-");
+        var bottonLes = document.getElementById("bottonLes");
+        bottonLes.onclick = function() {
+            agregar('-');
+        };
 
-        botton3 = document.getElementById("botton3");
-        botton3.onclick = () => agregar('3');
-        
-        botton2 = document.getElementById("botton2");
-        botton2.onclick = () => agregar('2');
+        var botton3 = document.getElementById("botton3");
+        botton3.onclick = function() {
+            agregar('3');
+        };
 
-        botton1 = document.getElementById("botton1");
-        botton1.onclick = () => agregar('1');
+        var botton2 = document.getElementById("botton2");
+        botton2.onclick = function() {
+            agregar('2');
+        };
 
-        bottonMult = document.getElementById("bottonMult");
-        bottonMult.onclick = () => agregar('*');
+        var botton1 = document.getElementById("botton1");
+        botton1.onclick = function() {
+            agregar('1');
+        };
 
-        botton0 = document.getElementById("botton0");
-        botton0.onclick = () => agregar("0");
+        var bottonMult = document.getElementById("bottonMult");
+        bottonMult.onclick = function() {
+            agregar('*');
+        };
 
-        bottonPoint = document.getElementById("bottonPoint");
-        bottonPoint.onclick = () => agregar('.');
+        var botton0 = document.getElementById("botton0");
+        botton0.onclick = function() {
+            agregar('0');
+        };
 
-        bottonCalc = document.getElementById("bottonCalc");
-        bottonCalc.onclick=calcular;
+        var bottonPoint = document.getElementById("bottonPoint");
+        bottonPoint.onclick = function() {
+            agregar('.');
+        };
 
-        bottonDiv = document.getElementById("bottonDiv");
-        bottonDiv.onclick = () => agregar('/');
+        var bottonCalc = document.getElementById("bottonCalc");
+        bottonCalc.onclick = calcular;
 
-        bottonBorrar = document.getElementById("bottonBorrar");
+        var bottonDiv = document.getElementById("bottonDiv");
+        bottonDiv.onclick = function() {
+            agregar('/');
+        };
+
+        var bottonBorrar = document.getElementById("bottonBorrar");
         bottonBorrar.onclick = borrar;
 
 

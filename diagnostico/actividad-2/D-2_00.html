@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let options =
+        {
+            sections: new Map(),
+            adjustments: new Map(),
+        }
+
+        let KeyboardAdjustments = new Map();
+
+        KeyboardAdjustments.set("moveForward", "w");
+        KeyboardAdjustments.set("moveBack", "s");
+        KeyboardAdjustments.set("moveLeft", "a");
+        KeyboardAdjustments.set("moveRight", "d");
+        KeyboardAdjustments.set("Sprint", "SHIFT");
+        KeyboardAdjustments.set("Jump", "SPACE");
+        KeyboardAdjustments.set("Duck", "CTRL");
+
+        options.sections.set("keyboard", KeyboardAdjustments);
+    </script>
+</body>
+</html>

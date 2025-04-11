@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        const factura = {
+            tipo: "A",
+            codigo: "01",
+            numeroComprobante: "0001-00000075",
+            fechaEmision: "23/02/2016",
+            condicionVenta: "Contado",
+
+            emisor: {
+                razonSocial: "EMPRESA S.A.",
+                direccion: "Belgrano 1010 Capital Federal",
+                telefono: "11 25879645",
+                cuit: "20-28717013-1",
+                responsableInscripto: true,
+                ingresosBrutos: "30-22222222-9",
+                inicioActividad: "01/01/2010"
+            },
+
+            cliente: {
+                nombre: "SOL S.R.L.",
+                direccion: "San Martín 587 Capital Federal, Buenos Aires",
+                cuit: "30-11111111-8",
+                responsableInscripto: true
+            },
+
+            detalles: [
+                {
+                codigo: 5896,
+                descripcion: "LATEX INTERIOR BLANCO x20L",
+                cantidad: 2,
+                unidadMedida: "u",
+                precioUnitario: 515.36,
+                bonificacion: 0,
+                alicuotaIVA: 21.0,
+                total: 1247.17
+                },
+                {
+                codigo: 5897,
+                descripcion: "PINCEL Nº 20",
+                cantidad: 5,
+                unidadMedida: "u",
+                precioUnitario: 82.36,
+                bonificacion: 0,
+                alicuotaIVA: 21.0,
+                total: 498.28
+                }
+            ],
+
+            totales: {
+                netoGravado: 1442.52,
+                iva21: 302.93,
+                subtotal: 1745.45,
+                total: 1745.45,
+                totalEnLetras: "mil setecientos cuarenta y cinco con 45"
+            }
+        };
+
+    </script>
+    
+</body>
+</html>

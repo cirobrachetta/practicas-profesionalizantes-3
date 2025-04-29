@@ -1,0 +1,11 @@
+Entidad : Semanforo
+
+atributos      |   variavilidad    |    type          |  Rango de valores    
+
+luz            |   variable        |    string        |  azul, amarillo, rojo
+
+Comportamiento:
+
+nombre         |  Parametro        |  Retorno
+
+Cambiar Luz    |  luzActual        |  luzSiguiente

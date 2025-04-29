@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script text="java-script">
+        class Impresora 
+        {
+            constructor()
+            {
+                this.Toner = 100;
+                this.encendida = false;
+            }
+
+            encender() {
+                this.encendida = true;
+                console.log("Impresora encendida.");
+            }
+
+            apagar() {
+                this.encendida = false;
+                console.log("Impresora apagada.");
+            }
+
+            imprimir(paginas) {
+                if (!this.encendida) {
+                    console.log("La impresora está apagada.");
+                    return;
+                }
+                const consumo = paginas * 2; // 2% por página (ejemplo)
+                if (this.toner >= consumo) {
+                    this.toner -= consumo;
+                    console.log(`Imprimiendo ${paginas} página(s). Toner restante: ${this.toner}%`);
+                } else {
+                    console.log("Toner insuficiente.");
+                }
+            }
+
+            estadoToner() {
+                return this.toner;
+            }
+
+        }
+        //uso
+        const miImpresora = new Impresora("HP");
+        miImpresora.encender();
+        miImpresora.imprimir(5);
+        console.log("Toner:", miImpresora.estadoToner(), "%");
+
+        //impresora como producto
+        class ProductoImpresora
+        {
+            constructor()
+            {
+                this.Precio = 148.000;
+                this.Modelo = "Brother Ax134B"
+                this.stock = 14;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+impresora:
+
+atributos      |   variavilidad    |    type          |  Rango de valores    
+
+toner          |   variable        |    int           |    0-100%
+
+Encendido      |    variable       |    boolean       |    true\false
+
+Comportamiento:
+
+nombre         |  Parametro        |  Retorno
+
+imprimir       | paginas : int     |  void
+
+encender       |    ---            |   void
+
+apagar         |    ---            |   void
+
+estadoToner    |    toner          |    int
+
+
+Producto Impresora:
+
+atributos      |   variavilidad    |    type          |  Rango de valores    
+
+precio         |   variable        |  double          |  ---
+
+modelo         |   const           |    string        |  ---
+
+stock          |    variable       |    int           |  ---

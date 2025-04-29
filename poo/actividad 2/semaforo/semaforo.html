@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Semáforo Japonés</title>
+  <style>
+    .semaforo {
+      width: 100px;
+      background: #333;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 50px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .luz {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: gray;
+      transition: background-color 0.3s;
+    }
+
+    .encendida.roja {
+      background-color: red;
+    }
+
+    .encendida.amarilla {
+      background-color: yellow;
+    }
+
+    .encendida.azul {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+
+<div class="semaforo">
+  <div id="azul" class="luz"></div> <!-- Azul arriba -->
+  <div id="amarilla" class="luz"></div>
+  <div id="roja" class="luz"></div> <!-- Rojo abajo -->
+</div>
+
+<script>
+
+  class Semaforo {
+    constructor() {
+      this.luzActual = 'azul';
+      this.timer = null;
+    }
+
+    cambiarLuz() {
+      const siguiente = {
+        azul: 'amarilla',
+        amarilla: 'roja',
+        roja: 'azul'
+      };
+      return siguiente[this.luzActual];
+    }
+
+    actualizar() {
+      ['azul', 'amarilla', 'roja'].forEach(color => {
+        document.getElementById(color).className = 'luz';
+      });
+
+      const luzEncendida = document.getElementById(this.luzActual);
+      luzEncendida.classList.add('encendida', this.luzActual);
+
+      this.luzActual = this.cambiarLuz();
+    }
+
+    // Iniciar el temporizador
+    iniciar() {
+      this.actualizar();
+      this.timer = setInterval(() => this.actualizar(), 3000);
+    }
+
+    // Detener el temporizador
+    detener() {
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+    }
+  }
+
+  // Crear una instancia del semáforo
+  const semaforo = new Semaforo();
+
+  // Iniciar el semáforo
+  semaforo.iniciar();
+
+  // Puedes detener el semáforo en cualquier momento con:
+  // semaforo.detener();
+</script>
+
+</body>
+</html>

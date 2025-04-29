@@ -1,0 +1,23 @@
+Ventilador
+
+Propiedades/Atributos:
+
+Nombre			     | Tipo de dato 	| Cte/Variable | Rango de valores posibles  | f(c)
+
+On/Off               |  boolean         |   variable   |    true\false              |   encender, apagar
+
+modo                 |  int             |   variable   |    0,1,2,3                   |   SubirModo, BajarModo, ModoActual
+
+Comportamiento:
+
+Nombre			   | Parámetros/Tipo	   | Retorno/Tipo
+
+encender           |    none               |    void
+
+apagar             |    none               |    void
+
+SubirModo          |    none               |    void
+
+BajarModo          |    none               |    void
+
+ModoActual         |    none               |    void

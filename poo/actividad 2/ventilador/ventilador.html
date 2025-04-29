@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventilador</title>
+</head>
+<body>
+    <script text="javascript">
+        class Ventilador
+        {
+            constructor()
+            {
+                this.OnOff = false;
+                this.Mode = 0;
+            }
+
+            Encender()
+            {
+                this.OnOff = true;
+                this.Mode = 1;
+
+                console.log("Ventilador Encendido");
+            }
+
+            apagar()
+            {
+                this.OnOff = false;
+                this.Mode = 0;
+
+                console.log("Ventilador Apagado");
+            }
+
+            ModoActual()
+            {
+                console.log("modo actual: ", this.Mode);
+            }
+
+            SubirModo()
+            {
+                if(this.Mode < 3)
+                {
+                    this.Mode + 1;
+                    console.log('Subiendo la potencia, Modo actual: ', this.ModoActual());
+                }
+                else
+                {
+                    console.log("Potencia maxima alcanzada, solo se podra bajar");
+                }
+            }
+
+            BajarModo()
+            {
+                if(this.Mode > 1)
+                {
+                    this.Mode - 1;
+                    console.log('Bajando la potencia, Modo actual: ', this.ModoActual());
+                }
+                else
+                {
+                    console.log("Potencia mminima alcanzada, solo se podra subir");
+                }
+            }
+        }
+
+        //uso
+        let ventilador = new Ventilador
+        ventilador.Encender();
+        ventilador.SubirModo();
+        ventilador.BajarModo();
+        ventilador.ModoActual();
+        ventilador.apagar();
+    </script>
+</body>
+</html>

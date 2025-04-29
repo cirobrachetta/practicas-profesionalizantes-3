@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto - Modelado OOP</title>
+</head>
+<body>
+    <script>
+        class Auto {
+            constructor(tipoCombustible) {
+                this.capacidadDelTanque = 100;
+                this.velocidadMax = 120;
+                this.ruedas = 4;
+
+                this.cantidadCombustible = 0;
+                this.velocidadActual = 0;
+                this.motor = false;
+                this.puertasAbiertas = false;
+                this.tipoCombustible = tipoCombustible;
+            }
+
+            cargarCombustible(tipo, cantidad) {
+                if (tipo !== this.tipoCombustible) {
+                    console.log(`Error: tipo de combustible incorrecto (${tipo}). Se espera: ${this.tipoCombustible}.`);
+                    return;
+                }
+                const nuevaCantidad = this.cantidadCombustible + cantidad;
+                if (nuevaCantidad > this.capacidadDelTanque) {
+                    this.cantidadCombustible = this.capacidadDelTanque;
+                    console.log("Tanque lleno. Combustible cargado al máximo.");
+                } else {
+                    this.cantidadCombustible = nuevaCantidad;
+                    console.log(`Combustible cargado. Total actual: ${this.cantidadCombustible}`);
+                }
+            }
+
+            encenderMotor() {
+                if (this.cantidadCombustible <= 0) {
+                    console.log("No se puede encender el motor: tanque vacío.");
+                    return;
+                }
+                this.motor = true;
+                console.log("Motor encendido.");
+            }
+
+            apagarMotor() {
+                this.motor = false;
+                this.velocidadActual = 0;
+                console.log("Motor apagado.");
+            }
+
+            acelerar(valor) {
+                if (!this.motor) {
+                    console.log("No se puede acelerar: motor apagado.");
+                    return;
+                }
+                if (this.cantidadCombustible <= 0) {
+                    console.log("No hay combustible para acelerar.");
+                    return;
+                }
+                this.velocidadActual += valor;
+                if (this.velocidadActual > this.velocidadMax) {
+                    this.velocidadActual = this.velocidadMax;
+                }
+                this.cantidadCombustible -= valor * 0.2;
+                if (this.cantidadCombustible < 0) this.cantidadCombustible = 0;
+                console.log(`Acelerando. Velocidad actual: ${this.velocidadActual} km/h. Combustible: ${this.cantidadCombustible}`);
+            }
+
+            frenar() {
+                if (this.velocidadActual > 0) {
+                    this.velocidadActual -= 10;
+                    if (this.velocidadActual < 0) this.velocidadActual = 0;
+                    console.log(`Frenando. Velocidad actual: ${this.velocidadActual} km/h.`);
+                } else {
+                    console.log("El auto ya está detenido.");
+                }
+            }
+
+            abrirPuertas() {
+                if (this.velocidadActual === 0) {
+                    this.puertasAbiertas = true;
+                    console.log("Puertas abiertas.");
+                } else {
+                    console.log("No se pueden abrir las puertas en movimiento.");
+                }
+            }
+
+            cerrarPuertas() {
+                this.puertasAbiertas = false;
+                console.log("Puertas cerradas.");
+            }
+        }
+
+        // Ejemplo de uso:
+        const miAuto = new Auto("nafta");
+        miAuto.cargarCombustible("nafta", 50);
+        miAuto.encenderMotor();
+        miAuto.acelerar(30);
+        miAuto.frenar();
+        miAuto.abrirPuertas(); // no se abrirán si está en movimiento
+        miAuto.frenar();
+        miAuto.abrirPuertas();
+    </script>
+</body>
+</html>

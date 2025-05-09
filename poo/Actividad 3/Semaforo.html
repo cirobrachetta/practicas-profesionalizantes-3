@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Semáforo con círculo</title>
+  <style type="text/css">
+    .luzroja { background-color: red; color: white; }
+    .luzamarilla { background-color: yellow; color: black; }
+    .luzverde { background-color: green; color: white; }
+    .luzapagada { background-color: white; color: black; }
+
+    #circle {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="red">LuzRoja</button>
+  <button id="yellow">LuzAmarilla</button>
+  <button id="green">LuzVerde</button>
+  <button id="on">Encender</button>
+  <button id="off">Apagar</button>
+
+  <div id="circle"></div>
+
+  <script type="text/javascript">
+    class SemaphoreView {
+      constructor(model) {
+        this._model = model;
+        this._model.addEventListener('changed', () => this.updateView());
+        this.updateView();
+      }
+
+      updateView() {
+        const state = this._model.getModelState();
+        document.getElementById('red').style.backgroundColor = state.red ? 'red' : 'white';
+        document.getElementById('yellow').style.backgroundColor = state.yellow ? 'yellow' : 'white';
+        document.getElementById('green').style.backgroundColor = state.green ? 'green' : 'white';
+      }
+    }
+
+    class SemaphoreModel extends EventTarget {
+      constructor(circle) {
+        super();
+        this.circle = circle;
+        this.timer = 0;
+        this.redTime = 4;
+        this.transitionTime = 1;
+        this.greenTime = 4;
+
+        this.redLightState = null;
+        this.yellowLightState = null;
+        this.greenLightState = null;
+        this.isRunning = false;
+
+        this.setShutdownState();
+      }
+
+      getModelState() {
+        return {
+          red: this.redLightState,
+          yellow: this.yellowLightState,
+          green: this.greenLightState
+        };
+      }
+
+      notifyLightChange() 
+      {
+        if (!this.circle) return;
+
+        const state = this.getModelState();
+        if (state.red || (!state.red && !state.yellow && !state.green)) {
+            this.circle.pause();
+        } else if (state.green) {
+            this.circle.resume();
+        }
+      }
+
+      setShutdownState() {
+        this.redLightState = false;
+        this.yellowLightState = false;
+        this.greenLightState = false;
+        this.dispatchEvent(new CustomEvent('changed'));
+        this.notifyLightChange();
+      }
+
+      setRedToGreenTransitionState() {
+        this.redLightState = true;
+        this.yellowLightState = true;
+        this.greenLightState = false;
+        this.dispatchEvent(new CustomEvent('changed'));
+        this.notifyLightChange();
+      }
+
+      setGreenLightState() {
+        this.redLightState = false;
+        this.yellowLightState = false;
+        this.greenLightState = true;
+        this.dispatchEvent(new CustomEvent('changed'));
+        this.notifyLightChange();
+      }
+
+      setRedLightState() {
+        this.redLightState = true;
+        this.yellowLightState = false;
+        this.greenLightState = false;
+        this.dispatchEvent(new CustomEvent('changed'));
+        this.notifyLightChange();
+      }
+
+      setGreenToRedTransitionState() {
+        this.redLightState = false;
+        this.yellowLightState = true;
+        this.greenLightState = true;
+        this.dispatchEvent(new CustomEvent('changed'));
+        this.notifyLightChange();
+      }
+
+      onTickEventHandler(event) {
+        this.timer++;
+
+        if (this.timer >= 0 && this.timer < this.redTime)
+          this.setRedLightState();
+
+        else if (this.timer >= this.redTime && this.timer < this.redTime + this.transitionTime)
+          this.setRedToGreenTransitionState();
+
+        else if (this.timer >= this.redTime + this.transitionTime && this.timer < this.redTime + this.transitionTime + this.greenTime)
+          this.setGreenLightState();
+
+        else if (this.timer >= this.redTime + this.transitionTime + this.greenTime &&
+                 this.timer <= this.redTime + 2 * this.transitionTime + this.greenTime)
+          this.setGreenToRedTransitionState();
+
+        else if (this.timer >= this.redTime + 2 * this.transitionTime + this.greenTime)
+          this.timer = 0;
+      }
+
+      run() {
+        if (!this.isRunning) {
+          this.worker = new Worker("timer.js");
+          this.worker.addEventListener('message', this.onTickEventHandler.bind(this));
+          this.isRunning = true;
+        } else {
+          console.log('Semaphore is running...');
+        }
+      }
+
+      shutdown() {
+        if (this.isRunning) {
+          this.worker.removeEventListener('message', this.onTickEventHandler);
+          this.worker.terminate();
+          this.setShutdownState();
+          this.isRunning = false;
+        }
+      }
+    }
+
+  class Circle 
+  {
+    constructor(element) 
+    {
+      this.element = element;
+      this.position = 0;
+      this.direction = 1;
+      this.worker = new Worker("circleWorker.js");
+
+      this.worker.onmessage = (event) => {
+          const { position } = event.data;
+          this.position = position;
+          this.element.style.left = position + 'px';
+      };
+
+
+      const updateWindowWidth = () => {
+        this.worker.postMessage({ action: 'init', windowWidth: window.innerWidth });
+      };
+
+      window.addEventListener('resize', updateWindowWidth);
+      updateWindowWidth(); // Inicial
+    }
+
+
+    resume() {
+      this.worker.postMessage({ action: 'resume' });
+    }
+
+    pause() {
+      this.worker.postMessage({ action: 'pause' });
+    }
+
+    stop() {
+      this.pause();
+      this.worker.postMessage({ action: 'reset' });
+      this.element.style.left = '0px';
+      this.position = 0;
+    }
+  };
+
+    function main() {
+      const circleElement = document.getElementById('circle');
+      const circle = new Circle(circleElement);
+      const semaphore = new SemaphoreModel(circle);
+      new SemaphoreView(semaphore);
+
+      document.getElementById('on').onclick = () => {
+        semaphore.run();
+        circle.resume();
+      };
+
+      document.getElementById('off').onclick = () => {
+        semaphore.shutdown();
+        circle.stop();
+      };
+    }
+
+    window.onload = main;
+  </script>
+</body>
+</html>

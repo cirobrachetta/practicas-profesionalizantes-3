@@ -34,9 +34,10 @@
 
         rotate(radians) {
             this.angle += radians;
+            this.updateColor();
         }
 
-        move(distance, canvas) {
+        move(distance) {
             const nextX = this.x + distance * Math.cos(this.angle);
             const nextY = this.y + distance * Math.sin(this.angle);
 
@@ -45,12 +46,13 @@
 
             if (
                 nextX - halfW >= 0 &&
-                nextX + halfW <= canvas.width &&
+                nextX + halfW <= RectangleController.canvasBounds.width &&
                 nextY - halfH >= 0 &&
-                nextY + halfH <= canvas.height
+                nextY + halfH <= RectangleController.canvasBounds.height
             ) {
                 this.x = nextX;
                 this.y = nextY;
+                this.updateColor();
             }
         }
 
@@ -60,29 +62,30 @@
     }
 
     class RectangleController {
-        constructor(rectangle, canvas) {
+        static canvasBounds = { width: 0, height: 0 };
+
+        constructor(rectangle) {
             this.rectangle = rectangle;
-            this.canvas = canvas;
             this.pressedKeys = new Set();
             this.ROTATION_SPEED = Math.PI / 60;
             this.MOVE_DISTANCE = 2.5;
         }
 
         initEventListeners() {
-            window.addEventListener('keydown', this.HandleKeyDown.bind(this));
-            window.addEventListener('keyup', this.HandleKeyUp.bind(this));
+            window.addEventListener('keydown', this.onKeyDown);
+            window.addEventListener('keyup', this.onKeyUp);
         }
 
         releaseEventListeners() {
-            window.removeEventListener('keydown', this.HandleKeyDown.bind(this));
-            window.removeEventListener('keyup', this.HandleKeyUp.bind(this));
+            window.removeEventListener('keydown', this.onKeyDown);
+            window.removeEventListener('keyup', this.onKeyUp);
         }
 
-        HandleKeyDown(e) {
+        onKeyDown = (e) => {
             this.pressedKeys.add(e.key);
         }
 
-        HandleKeyUp(e) {
+        onKeyUp = (e) => {
             this.pressedKeys.delete(e.key);
         }
 
@@ -95,14 +98,14 @@
         }
 
         onKeyUpPressEvent() {
-            this.rectangle.move(this.MOVE_DISTANCE, this.canvas);
+            this.rectangle.move(this.MOVE_DISTANCE);
         }
 
         onKeyDownPressEvent() {
-            this.rectangle.move(-this.MOVE_DISTANCE, this.canvas);
+            this.rectangle.move(-this.MOVE_DISTANCE);
         }
 
-        update() {
+        handleInput() {
             if (this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a')) {
                 this.onKeyLeftPressEvent();
             }
@@ -122,6 +125,13 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    function loop(ctx, canvas, rect, controller) {
+        controller.handleInput();
+        clearCanvas(ctx, canvas);
+        rect.draw(ctx);
+        requestAnimationFrame(() => loop(ctx, canvas, rect, controller));
+    }
+
     function main() {
         const canvas = document.createElement('canvas');
         canvas.width = 745;
@@ -129,19 +139,16 @@
         document.body.appendChild(canvas);
         const ctx = canvas.getContext('2d');
 
+        RectangleController.canvasBounds = {
+            width: canvas.width,
+            height: canvas.height
+        };
+
         const rect = new Rectangle(200, 200, 100, 50);
-        const controller = new RectangleController(rect, canvas);
+        const controller = new RectangleController(rect);
         controller.initEventListeners();
 
-        function loop() {
-            controller.update();
-            rect.updateColor();
-            clearCanvas(ctx, canvas);
-            rect.draw(ctx);
-            requestAnimationFrame(loop);
-        }
-
-        loop();
+        loop(ctx, canvas, rect, controller);
     }
 
     window.onload = main;

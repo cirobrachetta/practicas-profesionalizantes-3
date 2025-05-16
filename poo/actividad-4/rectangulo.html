@@ -27,7 +27,6 @@
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
-            // Usamos HSL para un color dinámico
             ctx.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
             ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
             ctx.restore();
@@ -37,8 +36,7 @@
             this.angle += radians;
         }
 
-        move(distance, canvas) 
-        {
+        move(distance, canvas) {
             const nextX = this.x + distance * Math.cos(this.angle);
             const nextY = this.y + distance * Math.sin(this.angle);
 
@@ -56,71 +54,72 @@
             }
         }
 
-        updateColor() 
-        {
-            this.hue = (this.hue + 1) % 360; // Recorrer el espectro HSL
+        updateColor() {
+            this.hue = (this.hue + 1) % 360;
         }
     }
 
-    class RectangleController 
-    {
-        constructor(rectangle, ctx, canvas) {
+    class RectangleController {
+        constructor(rectangle, canvas) {
             this.rectangle = rectangle;
-            this.ctx = ctx;
             this.canvas = canvas;
             this.pressedKeys = new Set();
             this.ROTATION_SPEED = Math.PI / 60;
             this.MOVE_DISTANCE = 2.5;
-
-            this.initListeners();
-            this.startLoop();
         }
 
-        initListeners() {
-            window.addEventListener('keydown', (e) => {
-                this.pressedKeys.add(e.key);
-            });
+        initEventListeners() {
+            window.addEventListener('keydown', this.HandleKeyDown.bind(this));
+            window.addEventListener('keyup', this.HandleKeyUp.bind(this));
+        }
 
-            window.addEventListener('keyup', (e) => {
-                this.pressedKeys.delete(e.key);
-            });
+        releaseEventListeners() {
+            window.removeEventListener('keydown', this.HandleKeyDown.bind(this));
+            window.removeEventListener('keyup', this.HandleKeyUp.bind(this));
+        }
+
+        HandleKeyDown(e) {
+            this.pressedKeys.add(e.key);
+        }
+
+        HandleKeyUp(e) {
+            this.pressedKeys.delete(e.key);
+        }
+
+        onKeyLeftPressEvent() {
+            this.rectangle.rotate(-this.ROTATION_SPEED);
+        }
+
+        onKeyRightPressEvent() {
+            this.rectangle.rotate(this.ROTATION_SPEED);
+        }
+
+        onKeyUpPressEvent() {
+            this.rectangle.move(this.MOVE_DISTANCE, this.canvas);
+        }
+
+        onKeyDownPressEvent() {
+            this.rectangle.move(-this.MOVE_DISTANCE, this.canvas);
         }
 
         update() {
-            if (this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a') ) {
-                this.rectangle.rotate(-this.ROTATION_SPEED);
+            if (this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a')) {
+                this.onKeyLeftPressEvent();
             }
-            if (this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d') ) {
-                this.rectangle.rotate(this.ROTATION_SPEED);
+            if (this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d')) {
+                this.onKeyRightPressEvent();
             }
-            if (this.pressedKeys.has('ArrowUp') || this.pressedKeys.has('w') ) {
-                this.rectangle.move(this.MOVE_DISTANCE, this.canvas);
+            if (this.pressedKeys.has('ArrowUp') || this.pressedKeys.has('w')) {
+                this.onKeyUpPressEvent();
             }
-            if (this.pressedKeys.has('ArrowDown') || this.pressedKeys.has('s') ) {
-                this.rectangle.move(-this.MOVE_DISTANCE, this.canvas);
+            if (this.pressedKeys.has('ArrowDown') || this.pressedKeys.has('s')) {
+                this.onKeyDownPressEvent();
             }
-
-            this.rectangle.updateColor();
-
-            this.render();
         }
+    }
 
-        clearCanvas() {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        }
-
-        render() {
-            this.clearCanvas();
-            this.rectangle.draw(this.ctx);
-        }
-
-        startLoop() {
-            const loop = () => {
-                this.update();
-                requestAnimationFrame(loop);
-            };
-            loop();
-        }
+    function clearCanvas(ctx, canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function main() {
@@ -131,7 +130,18 @@
         const ctx = canvas.getContext('2d');
 
         const rect = new Rectangle(200, 200, 100, 50);
-        new RectangleController(rect, ctx, canvas);
+        const controller = new RectangleController(rect, canvas);
+        controller.initEventListeners();
+
+        function loop() {
+            controller.update();
+            rect.updateColor();
+            clearCanvas(ctx, canvas);
+            rect.draw(ctx);
+            requestAnimationFrame(loop);
+        }
+
+        loop();
     }
 
     window.onload = main;

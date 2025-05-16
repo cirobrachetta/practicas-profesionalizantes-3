@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Rectángulo</title>
+    <style>
+        body {
+            width: 50%;
+            height: 50%;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+<script>
+    class Rectangle {
+        constructor(x, y, width, height, color = 'blue') {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.angle = 0;
+            this.color = color;
+        }
+
+        draw(ctx) {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+            ctx.restore();
+        }
+
+        rotate(radians) {
+            this.angle += radians;
+        }
+
+        move(distance, canvas) 
+        {
+            const nextX = this.x + distance * Math.cos(this.angle);
+            const nextY = this.y + distance * Math.sin(this.angle);
+
+            const halfW = this.width / 2;
+            const halfH = this.height / 2;
+
+            if (
+                nextX - halfW >= 0 &&
+                nextX + halfW <= canvas.width &&
+                nextY - halfH >= 0 &&
+                nextY + halfH <= canvas.height
+            ) {
+                this.x = nextX;
+                this.y = nextY;
+            }
+        }
+    }
+
+    class RectangleController 
+    {
+        constructor(rectangle, ctx, canvas) {
+            this.rectangle = rectangle;
+            this.ctx = ctx;
+            this.canvas = canvas;
+            this.pressedKeys = new Set();
+            this.ROTATION_SPEED = Math.PI / 60;
+            this.MOVE_DISTANCE = 2.5;
+
+            this.initListeners();
+            this.startLoop();
+        }
+
+        initListeners() {
+            window.addEventListener('keydown', (e) => {
+                this.pressedKeys.add(e.key);
+            });
+
+            window.addEventListener('keyup', (e) => {
+                this.pressedKeys.delete(e.key);
+            });
+        }
+
+        update() {
+            if (this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a') ) {
+                this.rectangle.rotate(-this.ROTATION_SPEED);
+            }
+            if (this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d') ) {
+                this.rectangle.rotate(this.ROTATION_SPEED);
+            }
+            if (this.pressedKeys.has('ArrowUp') || this.pressedKeys.has('w') ) {
+                this.rectangle.move(this.MOVE_DISTANCE, this.canvas);
+            }
+            if (this.pressedKeys.has('ArrowDown') || this.pressedKeys.has('s') ) {
+                this.rectangle.move(-this.MOVE_DISTANCE, this.canvas);
+            }
+
+            this.render();
+        }
+
+        clearCanvas() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        render() {
+            this.clearCanvas();
+            this.rectangle.draw(this.ctx);
+        }
+
+        startLoop() {
+            const loop = () => {
+                this.update();
+                requestAnimationFrame(loop);
+            };
+            loop();
+        }
+    }
+
+    function main() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 745;
+        canvas.height = 400;
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const rect = new Rectangle(200, 200, 100, 50);
+        new RectangleController(rect, ctx, canvas);
+    }
+
+    window.onload = main;
+</script>
+</body>
+</html>

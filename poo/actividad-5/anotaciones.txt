@@ -1,0 +1,6 @@
+refactoring - done
+add entitie circle - done
+add CircleController - done
+add entitieCreatorController and Entitie_selector(GUI) - in proges
+add colorController and colorInput(GUI) - coming soon
+add figureSelector - still on diseing stage

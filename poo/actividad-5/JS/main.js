@@ -2,14 +2,19 @@
 import { WindowController } from "./Controladores/WindowController.js";
 import { EntityCreatorController } from './Controladores/EntityCreatorController.js';
 import { EntityManager } from './Managers/EntityManager.js';
+import { EntitySelectionController } from './Controladores/EntitySelectionController.js';
+
 
 
 function main() {
-  const entityManager = new EntityManager();
-  const app = new WindowController(745, 400, entityManager);
+  const manager = new EntityManager();
 
-  const canvas = app.getCanvas();
-  const creator = new EntityCreatorController(canvas, entityManager);
+  const selectElement = document.getElementById('entity-select');
+  const selectionController = new EntitySelectionController(selectElement, manager);
+  const creator = new EntityCreatorController(null, manager, selectionController);
+
+  const app = new WindowController(745, 400, manager, selectionController);
+  creator.canvas = app.getCanvas();
   creator.init();
 
   app.start();

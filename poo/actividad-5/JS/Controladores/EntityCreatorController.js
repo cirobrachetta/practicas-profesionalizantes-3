@@ -1,11 +1,13 @@
 import { Rectangle } from '../Entidades/Rectangle.js';
 import { Circulo } from '../Entidades/Circle.js';
 import { MoveController } from './MoveController.js';
+import { EntitySelectionController } from './EntitySelectionController.js';
 
 export class EntityCreatorController {
-  constructor(canvas, manager) {
+  constructor(canvas, manager, selectionController) {
     this.canvas = canvas;
     this.manager = manager;
+    this.selectionController = selectionController;
   }
 
   init() {
@@ -41,6 +43,7 @@ export class EntityCreatorController {
     rect.controller.init();
 
     if (this.manager.addEntity(data.id, rect)) {
+      this.selectionController.updateSelectOptions();
       console.log(`Rectángulo "${data.id}" creado`);
     }
   }
@@ -60,6 +63,7 @@ export class EntityCreatorController {
     circ.controller.init();
 
     if (this.manager.addEntity(data.id, circ)) {
+      this.selectionController.updateSelectOptions();
       console.log(`Círculo "${data.id}" creado`);
     }
   }

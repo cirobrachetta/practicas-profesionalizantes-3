@@ -1,15 +1,15 @@
 // js/Controladores/WindowController.js
 import { clearCanvas } from '../utils/ClearCanvas.js';
-import { MoveController } from './MoveController.js';
 
 export class WindowController {
-  constructor(canvasWidth, canvasHeight, entityManager) {
+  constructor(canvasWidth, canvasHeight, entityManager, selectionController) {
     this.canvas = document.createElement('canvas');
     this.canvas.width = canvasWidth;
     this.canvas.height = canvasHeight;
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext('2d');
     this.entityManager = entityManager;
+    this.selectionController = selectionController;
   }
 
   start() {
@@ -19,17 +19,24 @@ export class WindowController {
   loop() {
     clearCanvas(this.ctx, this.canvas);
     const entidades = this.entityManager.getAll();
+    const selected = this.selectionController.getSelectedEntity();
 
     entidades.forEach(ent => {
-        if (ent.controller instanceof MoveController) {
-        ent.controller.getMovement(ent, this.canvas); // pasamos figura y canvas
-        }
+      // ✅ Solo mover la entidad seleccionada, y pasarle la figura y canvas
+      if (
+        ent === selected &&
+        ent.controller &&
+        typeof ent.controller.getMovement === 'function'
+      ) {
+        ent.controller.getMovement(ent, this.canvas);
+      }
 
-        ent.draw(this.ctx);
+      // Dibujar entidad
+      ent.draw(this.ctx);
     });
 
     requestAnimationFrame(() => this.loop());
-    }
+  }
 
   getCanvas() {
     return this.canvas;

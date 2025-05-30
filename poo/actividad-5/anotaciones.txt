@@ -1,6 +1,10 @@
 refactoring - done
 add entitie circle - done
 add CircleController - done
-add entitieCreatorController and EntityManager and Entitie_selector(GUI) - done but needs improbement
+add entitieCreatorController and EntityManager and Entitie_selector(GUI) and EntitySelectionController - done but needs improbement
+
+(actualmente el menu de entidades seleccionables no se actualiza correctamente al eliminar una entidad, por lo que se mantiene en el menu,
+eso hay que correguirlo, asi como emprolijar un poco el codigo)
+
 add colorController and colorInput(GUI) - coming soon
 add figureSelector - still on diseing stage

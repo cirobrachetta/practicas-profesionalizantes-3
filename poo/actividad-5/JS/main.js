@@ -1,16 +1,17 @@
-import { MoveController } from "./Controladores/MoveController.js";
-import { Rectangle } from "./Entidades/Rectangle.js";
-import { RectangleController } from './Controladores/RectangleController.js';
+// js/main.js
 import { WindowController } from "./Controladores/WindowController.js";
+import { EntityCreatorController } from './Controladores/EntityCreatorController.js';
+import { EntityManager } from './Managers/EntityManager.js';
+
 
 function main() {
-  const rect = new Rectangle(200, 200, 100, 50);
-  const movimiento = new MoveController();
-  const rectController = new RectangleController(rect, null, movimiento); // canvas lo tomará WindowController
+  const entityManager = new EntityManager();
+  const app = new WindowController(745, 400, entityManager);
 
-  const app = new WindowController(745, 400, rectController);
-  rectController.canvas = app.canvas; // ahora sí, lo enlazamos
+  const canvas = app.getCanvas();
+  const creator = new EntityCreatorController(canvas, entityManager);
+  creator.init();
+
   app.start();
 }
-
 window.onload = main;

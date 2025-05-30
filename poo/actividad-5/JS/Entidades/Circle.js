@@ -3,6 +3,7 @@ export class Circulo {
     this.x = x;
     this.y = y;
     this.radio = radio;
+    this.angle = 0;
     this.hue = 0; // para cambiar color si quieres animación
   }
 
@@ -13,6 +14,10 @@ export class Circulo {
 
   updateColor() {
     this.hue = (this.hue + 1) % 360;
+  }
+
+  rotate(radians) {
+    this.angle += radians;
   }
 
   draw(ctx) {

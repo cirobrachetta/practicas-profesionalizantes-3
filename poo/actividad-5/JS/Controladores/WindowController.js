@@ -1,26 +1,41 @@
-// js/controladores/WindowController.js
+// js/Controladores/WindowController.js
 import { clearCanvas } from '../utils/ClearCanvas.js';
+import { MoveController } from './MoveController.js';
 
 export class WindowController {
-  constructor(canvasWidth, canvasHeight, rectangleController) {
+  constructor(canvasWidth, canvasHeight, entityManager) {
     this.canvas = document.createElement('canvas');
     this.canvas.width = canvasWidth;
     this.canvas.height = canvasHeight;
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext('2d');
-
-    this.rectangleController = rectangleController;
+    this.entityManager = entityManager;
   }
 
   start() {
-    this.rectangleController.init();
     this.loop();
   }
 
   loop() {
-    this.rectangleController.update();
     clearCanvas(this.ctx, this.canvas);
-    this.rectangleController.rectangle.draw(this.ctx);
+    const entidades = this.entityManager.getAll();
+
+    entidades.forEach(ent => {
+        if (ent.controller instanceof MoveController) {
+        ent.controller.getMovement(ent, this.canvas); // pasamos figura y canvas
+        }
+
+        ent.draw(this.ctx);
+    });
+
     requestAnimationFrame(() => this.loop());
+    }
+
+  getCanvas() {
+    return this.canvas;
+  }
+
+  getContext() {
+    return this.ctx;
   }
 }

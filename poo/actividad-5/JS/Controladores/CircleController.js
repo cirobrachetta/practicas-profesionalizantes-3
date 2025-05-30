@@ -1,6 +1,3 @@
-import { Circulo } from '../entidades/Circulo.js';
-import { MoveController } from './MoveController.js';
-
 export class CircleController {
   constructor(circulo, canvas, movimientoController) {
     this.circulo = circulo;

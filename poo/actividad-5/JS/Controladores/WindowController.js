@@ -1,4 +1,3 @@
-// js/Controladores/WindowController.js
 import { clearCanvas } from '../utils/ClearCanvas.js';
 
 export class WindowController {
@@ -23,18 +22,14 @@ export class WindowController {
     const selected = this.selectionController.getSelectedEntity();
 
     entidades.forEach(ent => {
-      // ✅ Solo mover la entidad seleccionada, y pasarle la figura y canvas
-      if (
-        ent === selected &&
-        ent.controller &&
-        typeof ent.controller.getMovement === 'function'
-      ) {
-        ent.controller.getMovement(ent, this.canvas);
-      }
-
       // Dibujar entidad
       ent.draw(this.ctx);
     });
+
+    // Actualizar entidad seleccionada (movimiento, color, rotación...)
+    if (selected && selected.controller && typeof selected.controller.update === 'function') {
+      selected.controller.update();
+    }
 
     requestAnimationFrame(() => this.loop());
   }

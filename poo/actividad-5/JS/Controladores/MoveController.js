@@ -18,11 +18,15 @@ export class MoveController {
     this.pressedKeys.delete(e.key);
   }
 
-  getMovement(figura, canvas) {
+  // Ahora recibe el controlador de la figura, no la figura directa
+  getMovement(controladorFigura, canvas) {
     let dx = 0;
     let dy = 0;
 
-    const angle = figura.angle || 0;
+    const entidad = controladorFigura[Object.keys(controladorFigura).find(k => typeof controladorFigura[k] === 'object')];
+    // Esto asume que el primer objeto que encuentre es la entidad, por ejemplo controladorFigura.triangle
+
+    const angle = entidad.angle || 0;
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
 
@@ -37,31 +41,31 @@ export class MoveController {
       dy -= this.MOVE_DISTANCE * sin;
     }
 
-    // Rotación (solo si tiene rotate)
-    if ((this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a')) && typeof figura.rotate === 'function') {
-      figura.rotate(-this.ROTATION_SPEED);
+    // Rotación
+    if ((this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a')) && typeof controladorFigura.rotate === 'function') {
+      controladorFigura.rotate(-this.ROTATION_SPEED);
     }
 
-    if ((this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d')) && typeof figura.rotate === 'function') {
-      figura.rotate(this.ROTATION_SPEED);
+    if ((this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d')) && typeof controladorFigura.rotate === 'function') {
+      controladorFigura.rotate(this.ROTATION_SPEED);
     }
 
-    // Verificación de límites básicos
-    const nextX = figura.x + dx;
-    const nextY = figura.y + dy;
+    // Límites (usando datos de la entidad)
+    const nextX = entidad.x + dx;
+    const nextY = entidad.y + dy;
 
-    // Intentamos calcular límites, suponiendo tamaño (si tiene ancho/alto/radio)
-    const halfW = figura.width ? figura.width / 2 : (figura.radio || 0);
-    const halfH = figura.height ? figura.height / 2 : (figura.radio || 0);
+    // Tamaño (width/height/radio)
+    const halfW = entidad.width ? entidad.width / 2 : (entidad.radio || 0);
+    const halfH = entidad.height ? entidad.height / 2 : (entidad.radio || 0);
 
     if (
       nextX - halfW >= 0 && nextX + halfW <= canvas.width &&
       nextY - halfH >= 0 && nextY + halfH <= canvas.height
     ) {
-      figura.move(dx, dy);
+      controladorFigura.move(dx, dy);
 
-      if (typeof figura.updateColor === 'function') {
-        figura.updateColor();
+      if (typeof controladorFigura.updateColor === 'function') {
+        controladorFigura.updateColor();
       }
     }
   }

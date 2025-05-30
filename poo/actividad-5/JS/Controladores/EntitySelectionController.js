@@ -27,8 +27,14 @@ export class EntitySelectionController {
     });
   }
 
+  update() {
+    if (this.selectedEntity && this.selectedEntity.controller) {
+      this.selectedEntity.controller.update();
+    }
+  }
+
   selectEntityById(id) {
-    const entity = this.entityManager.entities[id];
+    const entity = this.entityManager.getEntityById(id);
     if (entity) {
       this.selectedEntity = entity;
       this.updateButtons(); // para actualizar el highlight del botón seleccionado

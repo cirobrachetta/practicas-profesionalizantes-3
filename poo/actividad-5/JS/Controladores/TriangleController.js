@@ -1,6 +1,6 @@
-export class CircleController {
-  constructor(circulo, canvas, movimientoController) {
-    this.circulo = circulo;
+export class TriangleController {
+  constructor(triangle, canvas, movimientoController) {
+    this.triangle = triangle;
     this.canvas = canvas;
     this.movimientoController = movimientoController;
   }
@@ -14,21 +14,21 @@ export class CircleController {
     this.movimientoController.getMovement(this, this.canvas);
 
     // Color dinámico
-    if (this.circulo.useDynamicColor) {
+    if (this.triangle.useDynamicColor) {
       this.updateColor();
     }
   }
 
   updateColor() {
-    this.circulo.hue = (this.circulo.hue + 1) % 360;
+    this.triangle.hue = (this.triangle.hue + 1) % 360;
   }
 
   move(dx, dy) {
-    this.circulo.x += dx;
-    this.circulo.y += dy;
+    this.triangle.x += dx;
+    this.triangle.y += dy;
   }
 
   rotate(radians) {
-    this.circulo.angle += radians;
+    this.triangle.angle += radians;
   }
 }

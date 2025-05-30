@@ -6,7 +6,8 @@ export class WindowController {
     this.canvas = document.createElement('canvas');
     this.canvas.width = canvasWidth;
     this.canvas.height = canvasHeight;
-    document.body.appendChild(this.canvas);
+    const container = document.getElementById('canvas-container');
+    container.appendChild(this.canvas);
     this.ctx = this.canvas.getContext('2d');
     this.entityManager = entityManager;
     this.selectionController = selectionController;

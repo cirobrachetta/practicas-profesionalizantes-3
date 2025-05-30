@@ -3,11 +3,14 @@ export class EntityManager {
     this.entities = {};
   }
 
-  addEntity(id, entity) {
-    if (this.entities[id]) {
-      alert(`Ya existe una entidad con id "${id}"`);
+  addEntity(entity) {
+    const id = entity.id;
+
+    if (!id || this.entities[id]) {
+      alert(`Ya existe una entidad con id "${id}" o el ID es inválido`);
       return false;
     }
+
     this.entities[id] = entity;
     return true;
   }
@@ -23,5 +26,9 @@ export class EntityManager {
 
   getAll() {
     return Object.values(this.entities);
+  }
+
+  getEntityById(id) {
+    return this.entities[id] || null;
   }
 }

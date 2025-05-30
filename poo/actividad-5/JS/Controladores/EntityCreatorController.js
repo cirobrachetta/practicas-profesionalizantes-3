@@ -1,13 +1,14 @@
 import { Rectangle } from '../Entidades/Rectangle.js';
 import { Circulo } from '../Entidades/Circle.js';
 import { MoveController } from './MoveController.js';
-import { EntitySelectionController } from './EntitySelectionController.js';
+import { IdGenerator } from '../utils/IdGenerator.js';
 
 export class EntityCreatorController {
-  constructor(canvas, manager, selectionController) {
+  constructor(canvas, manager, selectionController, idGenerator) {
     this.canvas = canvas;
     this.manager = manager;
     this.selectionController = selectionController;
+    this.idGenerator = idGenerator;
   }
 
   init() {
@@ -17,14 +18,14 @@ export class EntityCreatorController {
   }
 
   promptCommonData() {
-    const id = prompt("ID único de la figura:");
+    const name = prompt("Nombre de la figura:");
     const x = parseFloat(prompt("Coordenada X:"));
     const y = parseFloat(prompt("Coordenada Y:"));
-    if (!id || isNaN(x) || isNaN(y)) {
+    if (!name || isNaN(x) || isNaN(y)) {
       alert("Datos inválidos");
       return null;
     }
-    return { id, x, y };
+    return { name, x, y };
   }
 
   createRectangle() {
@@ -39,11 +40,14 @@ export class EntityCreatorController {
     }
 
     const rect = new Rectangle(data.x, data.y, width, height);
+    rect.id = this.idGenerator.next();     // ID interno
+    rect.name = data.name || `Entidad-${rect.id}`; // Nombre visible
     rect.controller = new MoveController(); // Asociamos el controlador de movimiento
+    
     rect.controller.init();
 
-    if (this.manager.addEntity(data.id, rect)) {
-      this.selectionController.updateSelectOptions();
+    if (this.manager.addEntity(rect)) {
+      this.selectionController.updateButtons();
       console.log(`Rectángulo "${data.id}" creado`);
     }
   }
@@ -59,19 +63,38 @@ export class EntityCreatorController {
     }
 
     const circ = new Circulo(data.x, data.y, radio);
+    circ.id = this.idGenerator.next();     // ID interno
+    circ.name = data.name || `Entidad-${circ.id}`; // Nombre visible
     circ.controller = new MoveController(); // Asociamos el controlador de movimiento
     circ.controller.init();
 
-    if (this.manager.addEntity(data.id, circ)) {
-      this.selectionController.updateSelectOptions();
+    if (this.manager.addEntity(circ)) {
+      this.selectionController.updateButtons();
       console.log(`Círculo "${data.id}" creado`);
     }
   }
 
   deleteEntity() {
-    const id = prompt("ID de la entidad a eliminar:");
-    if (this.manager.removeEntity(id)) {
-      console.log(`Entidad "${id}" eliminada`);
+    // Pedimos al usuario el nombre (visible) de la entidad
+    const name = prompt("Nombre de la entidad a eliminar:");
+    if (!name) {
+      alert("Nombre inválido");
+      return;
+    }
+
+    // Buscar la entidad por nombre
+    const entities = this.manager.getAll();
+    const entityToRemove = entities.find(ent => ent.name === name);
+
+    if (!entityToRemove) {
+      alert(`No existe entidad con nombre "${name}"`);
+      return;
+    }
+
+    // Usar el id interno para eliminarla
+    if (this.manager.removeEntity(entityToRemove.id)) {
+      alert(`Entidad "${name}" eliminada`);
+      this.selectionController.updateButtons();
     }
   }
 }

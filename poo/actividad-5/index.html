@@ -6,16 +6,21 @@
   <link rel="stylesheet" href="./Styles/styles.css" />
 </head>
 <body>
-    <div id="menu">
+  <div id="main-layout">
+    <div id="left-panel">
+      <div id="menu">
         <button id="crear-rect">Crear Rectángulo</button>
         <button id="crear-circ">Crear Círculo</button>
         <button id="eliminar-figura">Eliminar Entidad</button>
+      </div>
+
+      <label>Entidades disponibles:</label>
+      <div id="buttons-container"></div>
     </div>
 
-    <label for="entity-select">Entidad seleccionada:</label>
-    <select id="entity-select">
-        <option value="">-- Ninguna --</option>
-    </select>
+    <!-- Contenedor para el canvas -->
+    <div id="canvas-container"></div>
+  </div>
 
   <script type="module" src="./JS/main.js"></script>
 </body>

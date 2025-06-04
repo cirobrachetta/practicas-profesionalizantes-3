@@ -4,4 +4,4 @@ add CircleController - done
 add entitieCreatorController and EntityManager and Entitie_selector(GUI) and EntitySelectionController - done
 add figureSelector - done
 add colorController and colorInput(GUI) - done
-add entity triangle - in progres
+add entity triangle - done

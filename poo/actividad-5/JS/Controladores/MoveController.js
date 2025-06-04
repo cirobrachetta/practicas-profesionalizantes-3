@@ -1,6 +1,5 @@
 export class MoveController {
-  constructor(entityManager) {
-    this.entityManager = entityManager;
+  constructor() {
     this.pressedKeys = new Set();
     this.ROTATION_SPEED = Math.PI / 60;
     this.MOVE_DISTANCE = 2.5;

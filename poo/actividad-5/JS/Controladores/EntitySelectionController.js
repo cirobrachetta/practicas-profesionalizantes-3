@@ -1,12 +1,21 @@
 export class EntitySelectionController {
   constructor(containerElement, entityManager) {
-    this.containerElement = containerElement; // div donde se crearán botones
+    this.containerElement = containerElement;
     this.entityManager = entityManager;
     this.selectedEntity = null;
+    this.selectionListeners = []; // <- NUEVO
+  }
+
+  onSelectionChange(callback) {
+    this.selectionListeners.push(callback);
+  }
+
+  notifySelectionChanged() {
+    this.selectionListeners.forEach(cb => cb(this.selectedEntity));
   }
 
   updateButtons() {
-    this.containerElement.innerHTML = ''; // limpiar botones previos
+    this.containerElement.innerHTML = '';
 
     const entities = this.entityManager.getAll();
 
@@ -16,7 +25,7 @@ export class EntitySelectionController {
       btn.dataset.entityId = entity.id;
 
       if (this.selectedEntity && this.selectedEntity.id === entity.id) {
-        btn.style.backgroundColor = 'lightblue'; // destacar seleccionado
+        btn.style.backgroundColor = 'lightblue';
       }
 
       btn.addEventListener('click', () => {
@@ -27,17 +36,12 @@ export class EntitySelectionController {
     });
   }
 
-  update() {
-    if (this.selectedEntity && this.selectedEntity.controller) {
-      this.selectedEntity.controller.update();
-    }
-  }
-
   selectEntityById(id) {
     const entity = this.entityManager.getEntityById(id);
     if (entity) {
       this.selectedEntity = entity;
-      this.updateButtons(); // para actualizar el highlight del botón seleccionado
+      this.updateButtons();
+      this.notifySelectionChanged(); // <- NOTIFICAMOS
     }
   }
 

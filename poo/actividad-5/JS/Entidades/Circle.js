@@ -9,10 +9,27 @@ export class Circulo {
     this.useDynamicColor = true;
   }
 
+  move(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+
+  rotate(radians) {
+    this.angle += radians;
+  }
+
+  updateColor() {
+    if (this.useDynamicColor) {
+      this.hue = (this.hue + 1) % 360;
+    }
+  }
+
   draw(ctx) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radio, 0, Math.PI * 2);
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.arc(0, 0, this.radio, 0, Math.PI * 2);
     ctx.fillStyle = this.useDynamicColor
       ? `hsl(${this.hue}, 100%, 50%)`
       : this.color;

@@ -1,8 +1,10 @@
 export class MoveController {
-  constructor() {
+  constructor(entityManager) {
+    this.entityManager = entityManager;
     this.pressedKeys = new Set();
     this.ROTATION_SPEED = Math.PI / 60;
     this.MOVE_DISTANCE = 2.5;
+    this.selectedEntity = null;
   }
 
   init() {
@@ -18,19 +20,21 @@ export class MoveController {
     this.pressedKeys.delete(e.key);
   }
 
-  // Ahora recibe el controlador de la figura, no la figura directa
-  getMovement(controladorFigura, canvas) {
+  setSelectedEntity(entity) {
+    this.selectedEntity = entity;
+  }
+
+  update(canvas) {
+    const entidad = this.selectedEntity;
+    if (!entidad) return;
+
     let dx = 0;
     let dy = 0;
-
-    const entidad = controladorFigura[Object.keys(controladorFigura).find(k => typeof controladorFigura[k] === 'object')];
-    // Esto asume que el primer objeto que encuentre es la entidad, por ejemplo controladorFigura.triangle
 
     const angle = entidad.angle || 0;
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
 
-    // Movimiento
     if (this.pressedKeys.has('ArrowUp') || this.pressedKeys.has('w')) {
       dx += this.MOVE_DISTANCE * cos;
       dy += this.MOVE_DISTANCE * sin;
@@ -41,32 +45,26 @@ export class MoveController {
       dy -= this.MOVE_DISTANCE * sin;
     }
 
-    // Rotación
-    if ((this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a')) && typeof controladorFigura.rotate === 'function') {
-      controladorFigura.rotate(-this.ROTATION_SPEED);
+    if (this.pressedKeys.has('ArrowLeft') || this.pressedKeys.has('a')) {
+      entidad.rotate(-this.ROTATION_SPEED);
     }
 
-    if ((this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d')) && typeof controladorFigura.rotate === 'function') {
-      controladorFigura.rotate(this.ROTATION_SPEED);
+    if (this.pressedKeys.has('ArrowRight') || this.pressedKeys.has('d')) {
+      entidad.rotate(this.ROTATION_SPEED);
     }
 
-    // Límites (usando datos de la entidad)
     const nextX = entidad.x + dx;
     const nextY = entidad.y + dy;
 
-    // Tamaño (width/height/radio)
-    const halfW = entidad.width ? entidad.width / 2 : (entidad.radio || 0);
-    const halfH = entidad.height ? entidad.height / 2 : (entidad.radio || 0);
+    const halfW = entidad.width ? entidad.width / 2 : (entidad.radio || entidad.lado / 2);
+    const halfH = entidad.height ? entidad.height / 2 : (entidad.radio || (Math.sqrt(3) / 2) * entidad.lado / 2);
 
     if (
       nextX - halfW >= 0 && nextX + halfW <= canvas.width &&
       nextY - halfH >= 0 && nextY + halfH <= canvas.height
     ) {
-      controladorFigura.move(dx, dy);
-
-      if (typeof controladorFigura.updateColor === 'function') {
-        controladorFigura.updateColor();
-      }
+      entidad.move(dx, dy);
+      entidad.updateColor?.();
     }
   }
 }

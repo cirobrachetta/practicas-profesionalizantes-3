@@ -10,25 +10,7 @@ export class CircleController {
   }
 
   update() {
-    // Movimiento delegando al movimientoController, pasándole este controlador
-    this.movimientoController.getMovement(this, this.canvas);
-
-    // Color dinámico
-    if (this.circulo.useDynamicColor) {
-      this.updateColor();
-    }
-  }
-
-  updateColor() {
-    this.circulo.hue = (this.circulo.hue + 1) % 360;
-  }
-
-  move(dx, dy) {
-    this.circulo.x += dx;
-    this.circulo.y += dy;
-  }
-
-  rotate(radians) {
-    this.circulo.angle += radians;
+    // Ya no hace falta manipular directamente desde aquí
+    this.movimientoController.getMovement(this.circulo, this.canvas);
   }
 }

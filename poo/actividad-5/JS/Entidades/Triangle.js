@@ -9,21 +9,38 @@ export class Triangle {
     this.useDynamicColor = true;
   }
 
-  draw(ctx) {
-    const altura = (Math.sqrt(3) / 2) * this.lado;
+  move(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
 
+  rotate(radians) {
+    this.angle += radians;
+  }
+
+  updateColor() {
+    if (this.useDynamicColor) {
+      this.hue = (this.hue + 1) % 360;
+    }
+  }
+
+  draw(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle);
-    ctx.beginPath();
-    ctx.moveTo(0, -altura / 2);
-    ctx.lineTo(-this.lado / 2, altura / 2);
-    ctx.lineTo(this.lado / 2, altura / 2);
-    ctx.closePath();
     ctx.fillStyle = this.useDynamicColor
       ? `hsl(${this.hue}, 100%, 50%)`
       : this.color;
+
+    // Dibujar triángulo equilátero centrado
+    const h = (Math.sqrt(3) / 2) * this.lado;
+    ctx.beginPath();
+    ctx.moveTo(-this.lado / 2, h / 3);
+    ctx.lineTo(this.lado / 2, h / 3);
+    ctx.lineTo(0, -2 * h / 3);
+    ctx.closePath();
     ctx.fill();
+
     ctx.restore();
   }
 }

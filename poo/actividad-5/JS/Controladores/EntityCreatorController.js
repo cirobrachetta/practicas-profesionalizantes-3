@@ -1,17 +1,14 @@
 import { Rectangle } from '../Entidades/Rectangle.js';
 import { Circulo } from '../Entidades/Circle.js';
 import { Triangle } from '../Entidades/Triangle.js';
-import { MoveController } from './MoveController.js';
-import { RectangleController } from './RectangleController.js';
-import { CircleController } from './CircleController.js';
-import { TriangleController } from './TriangleController.js';
 
 export class EntityCreatorController {
-  constructor(canvas, manager, selectionController, idGenerator) {
+  constructor(canvas, manager, selectionController, idGenerator, moveController) {
     this.canvas = canvas;
     this.manager = manager;
     this.selectionController = selectionController;
     this.idGenerator = idGenerator;
+    this.moveController = moveController; // singleton MoveController
   }
 
   init() {
@@ -43,22 +40,9 @@ export class EntityCreatorController {
       return;
     }
 
-    // Crear entidad
     const rect = new Rectangle(data.x, data.y, width, height);
     rect.id = this.idGenerator.next();
     rect.name = data.name || `Entidad-${rect.id}`;
-
-    // Crear controlador de movimiento
-    const movimientoController = new MoveController();
-
-    // Crear controlador específico de rectángulo
-    const rectController = new RectangleController(rect, this.canvas, movimientoController);
-
-    // Asociar el controlador a la entidad
-    rect.controller = rectController;
-
-    // Inicializar controlador (que inicializa MoveController)
-    rectController.init();
 
     if (this.manager.addEntity(rect)) {
       this.selectionController.updateButtons();
@@ -80,11 +64,6 @@ export class EntityCreatorController {
     circ.id = this.idGenerator.next();
     circ.name = data.name || `Entidad-${circ.id}`;
 
-    const movimientoController = new MoveController();
-    const circController = new CircleController(circ, this.canvas, movimientoController);
-    circ.controller = circController;
-    circController.init();
-
     if (this.manager.addEntity(circ)) {
       this.selectionController.updateButtons();
       console.log(`Círculo "${circ.name}" creado`);
@@ -104,11 +83,6 @@ export class EntityCreatorController {
     const trian = new Triangle(data.x, data.y, lado);
     trian.id = this.idGenerator.next();
     trian.name = data.name || `Entidad-${trian.id}`;
-
-    const movimientoController = new MoveController();
-    const trianController = new TriangleController(trian, this.canvas, movimientoController);
-    trian.controller = trianController;
-    trianController.init();
 
     if (this.manager.addEntity(trian)) {
       this.selectionController.updateButtons();

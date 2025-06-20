@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS practicas
 
 USE practicas;
 
-CREATE TABLE country (
+CREATE TABLE IF NOT EXISTS country (
   id INT AUTO_INCREMENT PRIMARY KEY,
   capital VARCHAR(100) NOT NULL,
   language VARCHAR(100) NOT NULL,
@@ -76,7 +76,7 @@ CALL country_get(6);
 
 USE practicas;
 
-CREATE TABLE city (
+CREATE TABLE IF NOT EXISTS city (
   id INT AUTO_INCREMENT PRIMARY KEY,
   id_country INT NOT NULL,
   name VARCHAR(100) NOT NULL,
